@@ -1,0 +1,58 @@
+jenkins:
+  systemMessage: "\n\nHi. This Jenkins is configured automatically by Jenkins Configuration as Code plugin.\n To create a new job or a pipeline, please push the Jenkinsfile as a separate remote branch to <<Git Repo>>.\n\n"
+
+  numExecutors: 3
+  mode: NORMAL
+  scmCheckoutRetryCount: 5
+  labelString: "master"  
+
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+      - id: "admin"
+        password: "admin"
+
+  crumbIssuer:
+    standard:
+      excludeClientIPFromCrumb: false
+
+  disableRememberMe: false  
+  
+  authorizationStrategy:
+    globalMatrix:
+      permissions:
+        - "View/Read:authenticated"
+        - "Job/Read:authenticated"
+        - "Job/Build:authenticated"        
+        - "Job/Discover:authenticated"
+        - "Job/Workspace:authenticated"
+        - "Job/Cancel:authenticated"
+        - "Run/Replay:authenticated"
+        - "Run/Update:authenticated"
+        - "Overall/Read:authenticated"  
+        - "Overall/Administer:admin"        
+
+  remotingSecurity:
+    enabled: true    
+
+tool:
+  git:
+    installations:
+      - name: git
+        home: /usr/bin/git      
+
+jobs:
+  - script: >
+      multibranchPipelineJob('Jenkins-Job-DSL') {
+          branchSources {
+              git {
+                  id = 'Jenkins-Job-DSL'
+                  remote('<Git Repo>')
+              }
+          }
+      }
+
+unclassified:
+  location:
+    adminAddress: janpreetsinghgill@gmail.com             
